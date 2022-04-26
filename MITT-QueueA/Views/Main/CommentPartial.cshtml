@@ -1,0 +1,8 @@
+﻿@model MITT_QueueA.Models.Comment
+<div>
+    <h5>
+        @Model.Content
+    </h5>
+    <h6><b>User:</b> @Html.DisplayFor(model => model.User.Email)</h6>
+    <h6><b>Date:</b> @Html.DisplayFor(model => model.DateAdded)</h6>
+</div>
