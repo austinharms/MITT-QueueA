@@ -75,10 +75,6 @@ namespace MITT_QueueA.Controllers
             if (!Request.IsAuthenticated)
                 return RedirectToAction("Login", "Account");
 
-            Question question = await db.Questions.FindAsync(answer.QuestionId);
-            if (question == null)
-                return HttpNotFound();
-
             if (ModelState.IsValid)
             {
                 string id = User.Identity.GetUserId();
@@ -94,7 +90,7 @@ namespace MITT_QueueA.Controllers
             }
 
             ViewBag.Answer = answer;
-            return View("Details", question);
+            return RedirectToAction("Details", new { id = answer.QuestionId });
         }
 
         [HttpPost]
@@ -113,11 +109,79 @@ namespace MITT_QueueA.Controllers
             }
 
             ViewBag.Comment = comment;
-            Question question = await db.Questions.FindAsync(comment.QuestionId);
-            if (question == null)
+            return RedirectToAction("Details", new { id = comment.QuestionId });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UpvoteAnswer(int answerId)
+        {
+            if (!Request.IsAuthenticated) return RedirectToAction("Login", "Account");
+            Answer answer = await db.Answers.FindAsync(answerId);
+            if (answer == null)
                 return HttpNotFound();
 
-            return View("Details", question);
+            string userId = User.Identity.GetUserId();
+            if (userId != answer.UserId)
+            {
+                AnswerVote vote = await db.AnswerVotes.FirstOrDefaultAsync(v => v.AnswerId == answerId && v.UserId == userId);
+                if (vote == null)
+                {
+                    vote = new AnswerVote { UserId = userId, AnswerId = answerId, IsUpvote = true };
+                    db.AnswerVotes.Add(vote);
+                }
+                else
+                {
+                    if (vote.IsUpvote)
+                    {
+                        db.AnswerVotes.Remove(vote);
+                    }
+                    else
+                    {
+                        vote.IsUpvote = true;
+                    }
+                }
+
+                await db.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Details", new { id = answer.QuestionId });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DownvoteAnswer(int answerId)
+        {
+            if (!Request.IsAuthenticated) return RedirectToAction("Login", "Account");
+            Answer answer = await db.Answers.FindAsync(answerId);
+            if (answer == null)
+                return HttpNotFound();
+
+            string userId = User.Identity.GetUserId();
+            if (userId != answer.UserId)
+            {
+                AnswerVote vote = await db.AnswerVotes.FirstOrDefaultAsync(v => v.AnswerId == answerId && v.UserId == userId);
+                if (vote == null)
+                {
+                    vote = new AnswerVote { UserId = userId, AnswerId = answerId, IsUpvote = false };
+                    db.AnswerVotes.Add(vote);
+                }
+                else
+                {
+                    if (!vote.IsUpvote)
+                    {
+                        db.AnswerVotes.Remove(vote);
+                    }
+                    else
+                    {
+                        vote.IsUpvote = false;
+                    }
+                }
+
+                await db.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Details", new { id = answer.QuestionId });
         }
     }
 }
