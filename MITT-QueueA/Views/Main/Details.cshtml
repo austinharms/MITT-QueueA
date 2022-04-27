@@ -1,5 +1,4 @@
 ﻿@using MITT_QueueA.Models
-@using Microsoft.AspNet.Identity
 @model MITT_QueueA.Models.Question
 @{
     ViewBag.Title = Model.Title;
@@ -12,14 +11,14 @@
             {
                 @Html.AntiForgeryToken()
                 <input type="number" name="answerId" hidden value="@ViewBag.QuestionAnswer.Id" />
-                <input type="submit" value="Upvote" @((!Request.IsAuthenticated || User.Identity.GetUserId() == Model.UserId) ? "disabled" : "") class="btn btn-default" />
+                <input type="submit" value="Upvote" @((!Request.IsAuthenticated || ViewBag.UserId == Model.UserId) ? "disabled" : "") class="btn btn-default" />
             }
-            @(((Answer)ViewBag.QuestionAnswer).UserVotes.Sum(v => v.IsUpvote ? 1 : -1))
+            @(((Answer)ViewBag.QuestionAnswer).Rating)
             @using (Html.BeginForm("DownvoteAnswer", "Main"))
             {
                 @Html.AntiForgeryToken()
                 <input type="number" name="answerId" hidden value="@ViewBag.QuestionAnswer.Id" />
-                <input type="submit" value="Downvote" @((!Request.IsAuthenticated || User.Identity.GetUserId() == Model.UserId) ? "disabled" : "") class="btn btn-default" />
+                <input type="submit" value="Downvote" @((!Request.IsAuthenticated || ViewBag.UserId == Model.UserId) ? "disabled" : "") class="btn btn-default" />
             }
         </div>
         <div class="question">
@@ -74,14 +73,32 @@
                     {
                         @Html.AntiForgeryToken()
                         <input type="number" name="answerId" hidden value="@a.Id" />
-                        <input type="submit" value="Upvote" @((!Request.IsAuthenticated || User.Identity.GetUserId() == a.UserId) ? "disabled" : "") class="btn btn-default" />
+                        <input type="submit" value="Upvote" @((!Request.IsAuthenticated || ViewBag.UserId == a.UserId) ? "disabled" : "") class="btn btn-default" />
                     }
-                    @(a.UserVotes.Sum(v => v.IsUpvote ? 1 : -1))
+                    @(a.Rating)
                     @using (Html.BeginForm("DownvoteAnswer", "Main"))
                     {
                         @Html.AntiForgeryToken()
                         <input type="number" name="answerId" hidden value="@a.Id" />
-                        <input type="submit" value="Downvote" @((!Request.IsAuthenticated || User.Identity.GetUserId() == a.UserId) ? "disabled" : "") class="btn btn-default" />
+                        <input type="submit" value="Downvote" @((!Request.IsAuthenticated || ViewBag.UserId == a.UserId) ? "disabled" : "") class="btn btn-default" />
+                    }
+
+                    @if (Model.UserId == ViewBag.UserId)
+                    {
+
+                        @using (Html.BeginForm("MarkAnswerCorrect", "Main"))
+                        {
+                            @Html.AntiForgeryToken()
+                            <input type="number" name="answerId" hidden value="@a.Id" />
+                            <input type="submit" value="Mark @(a.AcceptedAnswer?"Unc":"C")orrect" class="btn btn-default" />
+                        }
+                    }
+                    else
+                    {
+                        @if (a.AcceptedAnswer)
+                        {
+                            <p>Accepted</p>
+                        }
                     }
                 </div>
                 <div class="answer">

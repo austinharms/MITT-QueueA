@@ -35,7 +35,8 @@ namespace MITT_QueueA.Controllers
             Question question = await db.Questions.FindAsync(id);
             if (question == null)
                 return HttpNotFound();
-
+            question.Answers = question.Answers.Select(a => { a.Rating = a.UserVotes.Sum(v => v.IsUpvote ? 1 : -1); return a; }).OrderByDescending(a => a.AcceptedAnswer).ThenByDescending(a => a.Rating).ThenByDescending(a => a.DateAnswered).ToList();
+            ViewBag.UserId = User.Identity.GetUserId();
             return View(question);
         }
 
@@ -180,6 +181,29 @@ namespace MITT_QueueA.Controllers
 
                 await db.SaveChangesAsync();
             }
+
+            return RedirectToAction("Details", new { id = answer.QuestionId });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> MarkAnswerCorrect(int answerId)
+        {
+            if (!Request.IsAuthenticated) return RedirectToAction("Login", "Account");
+            Answer answer = await db.Answers.FindAsync(answerId);
+            if (answer == null)
+                return HttpNotFound();
+
+            Question question = await db.Questions.FindAsync(answer.QuestionId);
+            if (question == null)
+                return HttpNotFound();
+
+            string userId = User.Identity.GetUserId();
+            if (question.UserId != userId)
+                return RedirectToAction("Details", new { id = answer.QuestionId });
+
+            answer.AcceptedAnswer = !answer.AcceptedAnswer;
+            await db.SaveChangesAsync();
 
             return RedirectToAction("Details", new { id = answer.QuestionId });
         }
