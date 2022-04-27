@@ -69,6 +69,21 @@
             }
 
             <div class="answer-wrapper">
+                <div class="answer-rep">
+                    @using (Html.BeginForm("UpvoteAnswer", "Main"))
+                    {
+                        @Html.AntiForgeryToken()
+                        <input type="number" name="answerId" hidden value="@a.Id" />
+                        <input type="submit" value="Upvote" @((!Request.IsAuthenticated || User.Identity.GetUserId() == a.UserId) ? "disabled" : "") class="btn btn-default" />
+                    }
+                    @(a.UserVotes.Sum(v => v.IsUpvote ? 1 : -1))
+                    @using (Html.BeginForm("DownvoteAnswer", "Main"))
+                    {
+                        @Html.AntiForgeryToken()
+                        <input type="number" name="answerId" hidden value="@a.Id" />
+                        <input type="submit" value="Downvote" @((!Request.IsAuthenticated || User.Identity.GetUserId() == a.UserId) ? "disabled" : "") class="btn btn-default" />
+                    }
+                </div>
                 <div class="answer">
                     <h3>@a.Content</h3>
                     <h6><b>User:</b> @a.User.Email, <b>Date:</b> @a.DateAnswered</h6>

@@ -294,10 +294,6 @@
     <Content Include="Views\Test\Edit.cshtml" />
     <Content Include="Views\Test\Index.cshtml" />
     <Content Include="Views\Main\Details.cshtml" />
-    <Content Include="Views\Main\CreateAnswerPartial.cshtml" />
-    <Content Include="Views\Main\CreateCommentPartial.cshtml" />
-    <Content Include="Views\Main\AnswerPartial.cshtml" />
-    <Content Include="Views\Main\CommentPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
