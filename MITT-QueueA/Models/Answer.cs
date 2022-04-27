@@ -10,6 +10,7 @@ namespace MITT_QueueA.Models
     {
         public int Id { get; set; }
 
+        [Required]
         [Display(Name = "Answer")]
         [StringLength(2000, ErrorMessage = "{0} length must be between {2} and {1}.", MinimumLength = 10)]
         public string Content { get; set; }

@@ -4,29 +4,139 @@
     ViewBag.Title = Model.Title;
     ViewBag.QuestionAnswer = Model.Answers.First(a => a.IsQuestion);
 }
-
 <div>
-    <h2>@Model.Title</h2>
-    <hr />
-    <h4>Description:</h4>
-    <p>
-        @ViewBag.QuestionAnswer.Content
-    </p>
-    <br>
-    <h6><b>User:</b> @Html.DisplayFor(model => model.User.Email)</h6>
-    <h6><b>Date:</b> @Html.DisplayFor(model => model.DateAsked)</h6>
-    <hr />
-    @Html.Partial("CreateCommentPartial", (Comment)((ViewBag.PendingComment != null && ViewBag.PendingComment.AnswerId == ViewBag.QuestionAnswer.Id) ? ViewBag.PendingComment : new Comment { AnswerId = ViewBag.QuestionAnswer.Id, QuestionId = Model.Id }))
-    
-    @foreach (Answer answer in Model.Answers)
-    {
-        if (answer.IsQuestion)
+    <div class="question-wrapper">
+        <div class="question">
+            <h2>@Model.Title</h2>
+            <h6><b>User:</b> @Html.DisplayFor(model => model.User.Email) <b>Date:</b> @Html.DisplayFor(model => model.DateAsked)</h6>
+            <hr>
+            <h3>@ViewBag.QuestionAnswer.Content</h3>
+            <hr>
+        </div>
+        <div class="comments-wrapper">
+            <h5>Comments:</h5>
+            @foreach (Comment c in ViewBag.QuestionAnswer.Comments)
+            {
+                <div class="comment">
+                    <h4>@c.Message</h4>
+                    <h6><b>User:</b> @Html.DisplayFor(model => model.User.Email) <b>Date:</b> @Html.DisplayFor(model => model.DateAsked)</h6>
+                </div>
+            }
+            <div class="create-comment">
+                @if (Request.IsAuthenticated)
+                {
+                    <h5>Add Comment:</h5>
+                    using (Html.BeginForm("AddComment", "Main"))
+                    {
+                        @Html.AntiForgeryToken()
+                        <input hidden type="number" name="answerId" value="@ViewBag.QuestionAnswer.Id" />
+                        <input hidden type="number" name="questionId" value="@Model.Id" />
+                        <input type="text" name="Message" data-val="true" data-val-required="Answer length must be between 3 and 500. " data-val-length="Answer length must be between 3 and 500." data-val-length-max="500" data-val-length-min="3" value="@((ViewBag.Comment != null && ViewBag.Comment.AnswerId == ViewBag.QuestionAnswer.Id)?ViewBag.Comment.Message:"")" />
+                        <input type="submit" value="Post" class="btn btn-default" />
+                        <div class="field-validation-valid text-danger" data-valmsg-for="Message" data-valmsg-replace="true"></div>
+                    }
+                }
+                else
+                {
+                    <h6>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" }) to add Comments</h6>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="answers-wrapper">
+        <h2>Answers:</h2>
+        @foreach (Answer a in Model.Answers)
         {
-            continue;
+            if (a.IsQuestion)
+            {
+                continue;
+            }
+
+            <div class="answer-wrapper">
+                <div class="answer">
+                    <h3>@a.Content</h3>
+                    <h6><b>User:</b> @a.User.Email, <b>Date:</b> @a.DateAnswered</h6>
+                </div>
+                <div class="comments-wrapper">
+                    @if (a.Comments.Count > 0)
+                    {
+                        <h5>Comments:</h5>
+                        foreach (Comment c in a.Comments)
+                        {
+                            <div class="comment">
+                                <h4>@c.Message</h4>
+                                <h6><b>User:</b> @Html.DisplayFor(model => model.User.Email) <b>Date:</b> @Html.DisplayFor(model => model.DateAsked)</h6>
+                            </div>
+                        }
+                    }
+
+                    <div class="create-comment">
+                        @if (Request.IsAuthenticated)
+                        {
+                            <h5>Add Comment:</h5>
+                            using (Html.BeginForm("AddComment", "Main"))
+                            {
+                                @Html.AntiForgeryToken()
+                                <input hidden type="number" name="answerId" value="@a.Id" />
+                                <input hidden type="number" name="questionId" value="@Model.Id" />
+                                <input type="text" name="Message" data-val="true" data-val-required="Answer length must be between 3 and 500. " data-val-length="Answer length must be between 3 and 500." data-val-length-max="500" data-val-length-min="3" value="@((ViewBag.Comment != null && ViewBag.Comment.AnswerId == a.Id)?ViewBag.Comment.Message:"")" />
+                                <input type="submit" value="Post" class="btn btn-default" />
+                                <div class="field-validation-valid text-danger" data-valmsg-for="Message" data-valmsg-replace="true"></div>
+                            }
+                        }
+                        else
+                        {
+                            <h6>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" }) to add Comments</h6>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="create-answer">
+            <h4>Add Answer:</h4>
+            @if (Request.IsAuthenticated)
+            {
+                using (Html.BeginForm("AddAnswer", "Main"))
+                {
+                    @Html.AntiForgeryToken()
+                    <input hidden type="number" name="questionId" value="@Model.Id" />
+                    <textarea name="Content" data-val="true" data-val-required="This " data-val-length="Answer length must be between 10 and 2000." data-val-length-max="2000" data-val-length-min="10">@(ViewBag.Answer == null?"":ViewBag.Answer.Content)</textarea>
+                    <div class="field-validation-valid text-danger" data-valmsg-for="Content" data-valmsg-replace="true"></div>
+                    <input type="submit" value="Post" class="btn btn-default" />
+                }
+            }
+            else
+            {
+                <h5>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" }) to add Answers</h5>
+            }
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+@*<div>
+        <h2>@Model.Title</h2>
+        <hr />
+        <h4>Description:</h4>
+        <p>
+            @ViewBag.QuestionAnswer.Content
+        </p>
+        <br>
+        <h6><b>User:</b> @Html.DisplayFor(model => model.User.Email)</h6>
+        <h6><b>Date:</b> @Html.DisplayFor(model => model.DateAsked)</h6>
+        <hr />
+        @Html.Partial("CreateCommentPartial", (Comment)((ViewBag.PendingComment != null && ViewBag.PendingComment.AnswerId == ViewBag.QuestionAnswer.Id) ? ViewBag.PendingComment : new Comment { AnswerId = ViewBag.QuestionAnswer.Id, QuestionId = Model.Id }))
+
+        @foreach (Answer answer in Model.Answers)
+        {
+            if (answer.IsQuestion)
+            {
+                continue;
+            }
+
+            @Html.Partial("AnswerPartial", answer);
         }
 
-        @Html.Partial("AnswerPartial", answer);
-    }
-
-    @Html.Partial("CreateAnswerPartial", (Answer)(ViewBag.Answer ?? new Answer { QuestionId = Model.Id, Content = "" }))
-</div>
+        @Html.Partial("CreateAnswerPartial", (Answer)(ViewBag.Answer ?? new Answer { QuestionId = Model.Id, Content = "" }))
+    </div>*@

@@ -102,7 +102,7 @@ namespace MITT_QueueA.Controllers
         public async Task<ActionResult> AddComment([Bind(Include = "Message,AnswerId,QuestionId")] Comment comment)
         {
             if (!Request.IsAuthenticated) return RedirectToAction("Login", "Account");
-            if (ModelState.IsValid && false)
+            if (ModelState.IsValid)
             {
                 string id = User.Identity.GetUserId();
                 comment.UserId = id;
@@ -112,7 +112,7 @@ namespace MITT_QueueA.Controllers
                 return RedirectToAction("Details", new { id = comment.QuestionId });
             }
 
-            ViewBag.PendingComment = comment;
+            ViewBag.Comment = comment;
             Question question = await db.Questions.FindAsync(comment.QuestionId);
             if (question == null)
                 return HttpNotFound();

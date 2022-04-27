@@ -204,6 +204,18 @@
     <Compile Include="Migrations\202204270010342_ChangeCommentStringName.designer.cs">
       <DependentUpon>202204270010342_ChangeCommentStringName.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202204271435496_MakeAnswerContentRequired.cs" />
+    <Compile Include="Migrations\202204271435496_MakeAnswerContentRequired.designer.cs">
+      <DependentUpon>202204271435496_MakeAnswerContentRequired.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204271517229_UpdateCommentMinLength.cs" />
+    <Compile Include="Migrations\202204271517229_UpdateCommentMinLength.designer.cs">
+      <DependentUpon>202204271517229_UpdateCommentMinLength.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202204271527103_UpdateTitleRequirements.cs" />
+    <Compile Include="Migrations\202204271527103_UpdateTitleRequirements.designer.cs">
+      <DependentUpon>202204271527103_UpdateTitleRequirements.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Answer.cs" />
@@ -315,6 +327,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202204270010342_ChangeCommentStringName.resx">
       <DependentUpon>202204270010342_ChangeCommentStringName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204271435496_MakeAnswerContentRequired.resx">
+      <DependentUpon>202204271435496_MakeAnswerContentRequired.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204271517229_UpdateCommentMinLength.resx">
+      <DependentUpon>202204271517229_UpdateCommentMinLength.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202204271527103_UpdateTitleRequirements.resx">
+      <DependentUpon>202204271527103_UpdateTitleRequirements.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

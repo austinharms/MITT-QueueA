@@ -11,7 +11,7 @@ namespace MITT_QueueA.Models
     {
         public int Id { get; set; }
         [Display(Name = "Comment")]
-        [StringLength(500, ErrorMessage = "{0} length must be between {2} and {1}.", MinimumLength = 10)]
+        [StringLength(500, ErrorMessage = "{0} length must be between {2} and {1}.", MinimumLength = 3)]
         public string Message { get; set; }
         public DateTime DateAdded { get; set; }
         public string UserId { get; set; }
