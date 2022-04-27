@@ -12,5 +12,5 @@
         @Html.Partial("CommentPartial", comment)
     }
 
-    @Html.Partial("CreateCommentPartial", new Comment { AnswerId = Model.Id });
+    @Html.Partial("CreateCommentPartial", (Comment)((ViewBag.PendingComment != null && ViewBag.PendingComment.AnswerId == Model.Id)? ViewBag.PendingComment: new Comment { AnswerId = Model.Id, QuestionId = Model.QuestionId }));
 </div>

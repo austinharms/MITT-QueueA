@@ -2,6 +2,7 @@
 @model MITT_QueueA.Models.Question
 @{
     ViewBag.Title = Model.Title;
+    ViewBag.QuestionAnswer = Model.Answers.First(a => a.IsQuestion);
 }
 
 <div>
@@ -9,12 +10,14 @@
     <hr />
     <h4>Description:</h4>
     <p>
-        @Model.Answers.First(a => a.IsQuestion).Content
+        @ViewBag.QuestionAnswer.Content
     </p>
     <br>
     <h6><b>User:</b> @Html.DisplayFor(model => model.User.Email)</h6>
     <h6><b>Date:</b> @Html.DisplayFor(model => model.DateAsked)</h6>
     <hr />
+    @Html.Partial("CreateCommentPartial", (Comment)((ViewBag.PendingComment != null && ViewBag.PendingComment.AnswerId == ViewBag.QuestionAnswer.Id) ? ViewBag.PendingComment : new Comment { AnswerId = ViewBag.QuestionAnswer.Id, QuestionId = Model.Id }))
+    
     @foreach (Answer answer in Model.Answers)
     {
         if (answer.IsQuestion)

@@ -99,23 +99,21 @@ namespace MITT_QueueA.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AddComment([Bind(Include = "Content,AnswerId")] Comment comment)
+        public async Task<ActionResult> AddComment([Bind(Include = "Message,AnswerId,QuestionId")] Comment comment)
         {
-            //if (!Request.IsAuthenticated) return RedirectToAction("Login", "Account");
-            //if (ModelState.IsValid)
-            //{
-            //    string id = User.Identity.GetUserId();
-            //    answer.UserId = id;
-            //    answer.AcceptedAnswer = false;
-            //    answer.DateAnswered = DateTime.Now;
-            //    answer.IsQuestion = false;
-            //    db.Answers.Add(answer);
-            //    await db.SaveChangesAsync();
-            //    return RedirectToAction("Details", new { id = answer.QuestionId });
-            //}
+            if (!Request.IsAuthenticated) return RedirectToAction("Login", "Account");
+            if (ModelState.IsValid && false)
+            {
+                string id = User.Identity.GetUserId();
+                comment.UserId = id;
+                comment.DateAdded = DateTime.Now;
+                db.Comments.Add(comment);
+                await db.SaveChangesAsync();
+                return RedirectToAction("Details", new { id = comment.QuestionId });
+            }
 
-            //ViewBag.Answer = answer;
-            Question question = await db.Questions.FindAsync(0);
+            ViewBag.PendingComment = comment;
+            Question question = await db.Questions.FindAsync(comment.QuestionId);
             if (question == null)
                 return HttpNotFound();
 
