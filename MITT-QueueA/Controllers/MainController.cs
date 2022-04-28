@@ -202,9 +202,20 @@ namespace MITT_QueueA.Controllers
             if (question.UserId != userId)
                 return RedirectToAction("Details", new { id = answer.QuestionId });
 
-            answer.AcceptedAnswer = !answer.AcceptedAnswer;
-            await db.SaveChangesAsync();
+            if (answer.AcceptedAnswer)
+            {
+                answer.AcceptedAnswer = false;
+            } 
+            else
+            {
+                Answer acceptedAnswer = await db.Answers.FirstOrDefaultAsync(a => a.AcceptedAnswer && a.QuestionId == answer.QuestionId);
+                if (acceptedAnswer != null)
+                    acceptedAnswer.AcceptedAnswer = false;
 
+                answer.AcceptedAnswer = true;
+            }
+
+            await db.SaveChangesAsync();
             return RedirectToAction("Details", new { id = answer.QuestionId });
         }
     }

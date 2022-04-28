@@ -86,7 +86,7 @@
                     @if (Model.UserId == ViewBag.UserId)
                     {
 
-                        @using (Html.BeginForm("MarkAnswerCorrect", "Main"))
+                        using (Html.BeginForm("MarkAnswerCorrect", "Main"))
                         {
                             @Html.AntiForgeryToken()
                             <input type="number" name="answerId" hidden value="@a.Id" />
@@ -95,7 +95,7 @@
                     }
                     else
                     {
-                        @if (a.AcceptedAnswer)
+                        if (a.AcceptedAnswer)
                         {
                             <p>Accepted</p>
                         }
