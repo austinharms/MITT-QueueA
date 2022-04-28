@@ -7,43 +7,30 @@
 {
     @Html.AntiForgeryToken()
     <h2>Create Question</h2>
-    <div class="form-horizontal">
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
-            </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Content, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.TextAreaFor(model => model.Content, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Content, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <h4><b>Add Tags:</b></h4>
-        <div>
-            <div class="tag-wrapper" id="tag-container"></div>
-            <input class="awesomplete" type="text" data-list="@ViewBag.Tags" data-minchars="1" id="add-tag" name="add-tag" />
-            <div id="tag-feedback" hidden></div>
-            <button id="add-tag-button">Add</button>
-        </div>
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "block" })
+    @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+    @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Post Question" class="btn btn-default" />
-            </div>
+    @Html.LabelFor(model => model.Content, htmlAttributes: new { @class = "block" })
+    @Html.TextAreaFor(model => model.Content, new { htmlAttributes = new { @class = "form-control" } })
+    @Html.ValidationMessageFor(model => model.Content, "", new { @class = "text-danger" })
+    <h4><b>Add Tags:</b></h4>
+    <div>
+        <div class="tag-wrapper" id="tag-container"></div>
+        <input class="awesomplete form-control" type="text" data-list="@ViewBag.Tags" data-minchars="1" id="add-tag" name="add-tag" />
+        <div id="tag-feedback" hidden></div>
+        <button id="add-tag-button" class="btn btn-default">Add</button>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Post Question" class="btn btn-default" />
         </div>
     </div>
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
@@ -55,6 +42,7 @@
         const tagFeedback = document.getElementById("tag-feedback");
         const addTag = tagName => {
             const span = document.createElement("span");
+            span.classList.add("question-tag");
             span.innerHTML = `<input name="Tags" hidden value="${tagName}" />${tagName}`;
             const removeSpan = document.createElement("span");
             removeSpan.innerHTML = "X";

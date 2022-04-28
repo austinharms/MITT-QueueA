@@ -4,50 +4,59 @@
     ViewBag.Title = "Home Page";
 }
 
-<div class="jumbotron">
+<div class="title">
     <h1 class="text-center">Queue&A</h1>
 </div>
-<div>
+<div class="flex-space">
     <h2>New Questions</h2>
     <form method="get">
         <input name="page" type="number" value="@ViewBag.Page" hidden />
+        <span class="small-font">Sort: </span>
         <select name="sort" id="sort-mode">
             <option @(ViewBag.Sort == 0 ? "Selected" : "") value="0">Newest</option>
             <option @(ViewBag.Sort == 1 ? "Selected" : "") value="1">Most Answers</option>
         </select>
     </form>
 </div>
-@foreach (Question q in Model)
-{
-    <div class="row">
-        <span class="question-rep-span"><b>@q.Answers.First(a => a.IsQuestion).UserVotes.Sum(v => v.IsUpvote ? 1 : -1)</b></span>
-        <a href="/Main/Details/@q.Id">
-            <h3>@q.Title</h3>
-        </a>
-        <div class="tag-wrapper">
-            @foreach (Tag t in q.Tags)
-            {
-                <a href="/Main/Tags/@t.Id"><span class="question-tag">@t.Name</span></a>
-            }
+<div class="question-list">
+    @foreach (Question q in Model)
+    {
+        <div class="row question-row">
+            <div class="inline-block question-rep">
+                @q.Answers.First(a => a.IsQuestion).UserVotes.Sum(v => v.IsUpvote ? 1 : -1)
+            </div>
+            <div class="inline-block">
+                <a href="/Main/Details/@q.Id">
+                    <h3>@q.Title</h3>
+                </a>
+                <div class="tag-wrapper">
+                    @foreach (Tag t in q.Tags)
+                    {
+                        <a href="/Main/Tags/@t.Id"><span class="question-tag">@t.Name</span></a>
+                    }
+                </div>
+                <p>User: @q.User.Email</p>
+            </div>
         </div>
-        <p>User: @q.User.Email</p>
-    </div>
-}
-
-<h4>Pages:</h4>
-@for (int pg = 1; pg <= (int)ViewBag.PageCount; ++pg)
-{
-    if (pg == ViewBag.Page)
+    }
+</div>
+<br>
+<footer>
+    <span>Pages:</span>
+    @for (int pg = 1; pg <= (int)ViewBag.PageCount; ++pg)
     {
-        <b>
+        if (pg == ViewBag.Page)
+        {
+            <b>
+                @Html.ActionLink(pg.ToString(), "Index", new { page = pg })
+            </b>
+        }
+        else
+        {
             @Html.ActionLink(pg.ToString(), "Index", new { page = pg })
-        </b>
+        }
     }
-    else
-    {
-        @Html.ActionLink(pg.ToString(), "Index", new { page = pg })
-    }
-}
+</footer>
 
 @section Scripts {
     <script>
