@@ -34,5 +34,9 @@ namespace MITT_QueueA.Models
 
         [NotMapped]
         public int Rating { get; set; }
+        [NotMapped]
+        public bool UserUpvote { get; set; } = false;
+        [NotMapped]
+        public bool UserDownvote { get; set; } = false;
     }
 }

@@ -68,7 +68,26 @@ namespace MITT_QueueA.Controllers
             Question question = await db.Questions.FindAsync(id);
             if (question == null)
                 return HttpNotFound();
-            question.Answers = question.Answers.Select(a => { a.Rating = a.UserVotes.Sum(v => v.IsUpvote ? 1 : -1); return a; }).OrderByDescending(a => a.AcceptedAnswer).ThenByDescending(a => a.Rating).ThenByDescending(a => a.DateAnswered).ToList();
+
+            string userId = User.Identity.GetUserId();
+            question.Answers = question.Answers.Select(a =>
+            {
+                a.Rating = a.UserVotes.Sum(v => v.IsUpvote ? 1 : -1);
+                AnswerVote vote = a.UserVotes.FirstOrDefault(v => v.UserId == userId);
+                if (vote != null)
+                {
+                    if (vote.IsUpvote)
+                    {
+                        a.UserUpvote = true;
+                    }
+                    else
+                    {
+                        a.UserDownvote = true;
+                    }
+                }
+
+                return a;
+            }).OrderByDescending(a => a.AcceptedAnswer).ThenByDescending(a => a.Rating).ThenByDescending(a => a.DateAnswered).ToList();
             ViewBag.UserId = User.Identity.GetUserId();
             return View(question);
         }

@@ -5,62 +5,64 @@
     ViewBag.QuestionAnswer = Model.Answers.First(a => a.IsQuestion);
 }
 <div>
-    <div class="question-wrapper">
+    <div class="question-rep-wrapper">
         <div class="question-rep">
             @using (Html.BeginForm("UpvoteAnswer", "Main"))
             {
                 @Html.AntiForgeryToken()
                 <input type="number" name="answerId" hidden value="@ViewBag.QuestionAnswer.Id" />
-                <input type="submit" value="Upvote" @((!Request.IsAuthenticated || ViewBag.UserId == Model.UserId) ? "disabled" : "") class="btn btn-default" />
+                <input type="submit" value="&#10151;" @((!Request.IsAuthenticated || ViewBag.UserId == Model.UserId) ? "disabled" : "") class="upvote @(((Answer)ViewBag.QuestionAnswer).UserUpvote?"enabled":"")" />
             }
-            @(((Answer)ViewBag.QuestionAnswer).Rating)
+            <span class="rating">@(((Answer)ViewBag.QuestionAnswer).Rating)</span>
             @using (Html.BeginForm("DownvoteAnswer", "Main"))
             {
                 @Html.AntiForgeryToken()
                 <input type="number" name="answerId" hidden value="@ViewBag.QuestionAnswer.Id" />
-                <input type="submit" value="Downvote" @((!Request.IsAuthenticated || ViewBag.UserId == Model.UserId) ? "disabled" : "") class="btn btn-default" />
+                <input type="submit" value="&#10151;" @((!Request.IsAuthenticated || ViewBag.UserId == Model.UserId) ? "disabled" : "") class="downvote @(((Answer)ViewBag.QuestionAnswer).UserDownvote?"enabled":"")" />
             }
         </div>
-        <div class="question">
-            <h2>@Model.Title</h2>
-            <h6><b>User:</b> @Html.DisplayFor(model => model.User.Email) <b>Date:</b> @Html.DisplayFor(model => model.DateAsked)</h6>
-            <hr>
-            <h3>@ViewBag.QuestionAnswer.Content</h3>
-            <div class="tag-wrapper">
-                @foreach (Tag t in Model.Tags)
-                {
-                    <span class="question-tag">@t.Name</span>
-                }
-            </div>
-            <hr>
-        </div>
-        <div class="comments-wrapper">
-            <h5>Comments:</h5>
-            @foreach (Comment c in ViewBag.QuestionAnswer.Comments)
-            {
-                <div class="comment">
-                    <h4>@c.Message</h4>
-                    <h6><b>User:</b> @Html.DisplayFor(model => model.User.Email) <b>Date:</b> @Html.DisplayFor(model => model.DateAsked)</h6>
-                </div>
-            }
-            <div class="create-comment">
-                @if (Request.IsAuthenticated)
-                {
-                    <h5>Add Comment:</h5>
-                    using (Html.BeginForm("AddComment", "Main"))
+        <div class="question-wrapper">
+            <div class="question">
+                <h2>@Model.Title</h2>
+                <h6><b>User:</b> @Html.DisplayFor(model => model.User.Email) <b>Date:</b> @Html.DisplayFor(model => model.DateAsked)</h6>
+                <hr>
+                <h3>@ViewBag.QuestionAnswer.Content</h3>
+                <div class="tag-wrapper">
+                    @foreach (Tag t in Model.Tags)
                     {
-                        @Html.AntiForgeryToken()
-                        <input hidden type="number" name="answerId" value="@ViewBag.QuestionAnswer.Id" />
-                        <input hidden type="number" name="questionId" value="@Model.Id" />
-                        <input type="text" name="Message" data-val="true" data-val-required="Answer length must be between 3 and 500. " data-val-length="Answer length must be between 3 and 500." data-val-length-max="500" data-val-length-min="3" value="@((ViewBag.Comment != null && ViewBag.Comment.AnswerId == ViewBag.QuestionAnswer.Id)?ViewBag.Comment.Message:"")" />
-                        <input type="submit" value="Post" class="btn btn-default" />
-                        <div class="field-validation-valid text-danger" data-valmsg-for="Message" data-valmsg-replace="true"></div>
+                        <span class="question-tag">@t.Name</span>
                     }
-                }
-                else
+                </div>
+                <hr>
+            </div>
+            <div class="comments-wrapper">
+                <h5>Comments:</h5>
+                @foreach (Comment c in ViewBag.QuestionAnswer.Comments)
                 {
-                    <h6>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" }) to add Comments</h6>
+                    <div class="comment">
+                        <h4>@c.Message</h4>
+                        <h6><b>User:</b> @Html.DisplayFor(model => model.User.Email) <b>Date:</b> @Html.DisplayFor(model => model.DateAsked)</h6>
+                    </div>
                 }
+                <div class="create-comment">
+                    @if (Request.IsAuthenticated)
+                    {
+                        <h5>Add Comment:</h5>
+                        using (Html.BeginForm("AddComment", "Main"))
+                        {
+                            @Html.AntiForgeryToken()
+                            <input hidden type="number" name="answerId" value="@ViewBag.QuestionAnswer.Id" />
+                            <input hidden type="number" name="questionId" value="@Model.Id" />
+                            <input type="text" name="Message" data-val="true" data-val-required="Answer length must be between 3 and 500. " data-val-length="Answer length must be between 3 and 500." data-val-length-max="500" data-val-length-min="3" value="@((ViewBag.Comment != null && ViewBag.Comment.AnswerId == ViewBag.QuestionAnswer.Id)?ViewBag.Comment.Message:"")" />
+                            <input type="submit" value="Post" class="btn btn-default" />
+                            <div class="field-validation-valid text-danger" data-valmsg-for="Message" data-valmsg-replace="true"></div>
+                        }
+                    }
+                    else
+                    {
+                        <h6>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" }) to add Comments</h6>
+                    }
+                </div>
             </div>
         </div>
     </div>

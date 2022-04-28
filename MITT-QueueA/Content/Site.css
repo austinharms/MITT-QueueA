@@ -118,3 +118,52 @@ textarea {
     .tag-wrapper .question-tag {
         margin-right: 5px;
     }
+
+.question-rep-wrapper {
+    display: flex;
+    justify-content: start;
+    align-items: start;
+}
+
+.question-rep {
+    margin-top: 20px;
+    font-size: 2em;
+    position: relative;
+}
+
+    .question-rep form, .question-rep input {
+        margin: 0;
+        padding: 0;
+        height: 1.2em;
+        width: 1.2em;
+    }
+
+.downvote {
+    position: absolute;
+    background-color: transparent;
+    border: none;
+    font-size: 1.5em;
+    color: #b01414;
+    transform: rotate(90deg);
+    bottom: 0;
+    left: -0.3em;
+}
+
+    .downvote .enabled {
+        color: #ff0000;
+    }
+
+.upvote {
+    position: absolute;
+    top: 0;
+    left: -0.5em;
+    background-color: transparent;
+    border: none;
+    font-size: 1.5em;
+    color: #d76625;
+    transform: rotate(270deg);
+}
+
+    .upvote .enabled {
+        color: #ff5d00;
+    }
