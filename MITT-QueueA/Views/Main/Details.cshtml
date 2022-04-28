@@ -169,28 +169,3 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
-@*<div>
-        <h2>@Model.Title</h2>
-        <hr />
-        <h4>Description:</h4>
-        <p>
-            @ViewBag.QuestionAnswer.Content
-        </p>
-        <br>
-        <h6><b>User:</b> @Html.DisplayFor(model => model.User.Email)</h6>
-        <h6><b>Date:</b> @Html.DisplayFor(model => model.DateAsked)</h6>
-        <hr />
-        @Html.Partial("CreateCommentPartial", (Comment)((ViewBag.PendingComment != null && ViewBag.PendingComment.AnswerId == ViewBag.QuestionAnswer.Id) ? ViewBag.PendingComment : new Comment { AnswerId = ViewBag.QuestionAnswer.Id, QuestionId = Model.Id }))
-
-        @foreach (Answer answer in Model.Answers)
-        {
-            if (answer.IsQuestion)
-            {
-                continue;
-            }
-
-            @Html.Partial("AnswerPartial", answer);
-        }
-
-        @Html.Partial("CreateAnswerPartial", (Answer)(ViewBag.Answer ?? new Answer { QuestionId = Model.Id, Content = "" }))
-    </div>*@
