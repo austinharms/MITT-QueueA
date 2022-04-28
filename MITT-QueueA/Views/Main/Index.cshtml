@@ -11,12 +11,11 @@
 <h2>New Questions</h2>
 @foreach (Question q in Model)
 {
-    <div class="row">
-        <a href="Main/Details?id=@q.Id"  >
-            <h3>@q.Title</h3>
-        </a>
-        <p>User: @q.User.Email</p>
-    </div>
+<div class="row">
+    <span class="question-rep-span"><b>@q.Answers.First(a => a.IsQuestion).UserVotes.Sum(v => v.IsUpvote ? 1 : -1)</b></span>
+    @Html.ActionLink("<h3>" + q.Title + "</h3>", "Details", new { id = q.Id })
+    <p>User: @q.User.Email</p>
+</div>
 }
 
 <h4>Pages:</h4>

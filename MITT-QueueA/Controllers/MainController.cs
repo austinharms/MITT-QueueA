@@ -130,6 +130,7 @@ namespace MITT_QueueA.Controllers
                 AnswerVote vote = await db.AnswerVotes.FirstOrDefaultAsync(v => v.AnswerId == answerId && v.UserId == userId);
                 if (vote == null)
                 {
+                    answer.User.Reputation += 5;
                     vote = new AnswerVote { UserId = userId, AnswerId = answerId, IsUpvote = true };
                     db.AnswerVotes.Add(vote);
                 }
@@ -138,10 +139,12 @@ namespace MITT_QueueA.Controllers
                     if (vote.IsUpvote)
                     {
                         db.AnswerVotes.Remove(vote);
+                        answer.User.Reputation -= 5;
                     }
                     else
                     {
                         vote.IsUpvote = true;
+                        answer.User.Reputation += 10;
                     }
                 }
 
@@ -168,16 +171,19 @@ namespace MITT_QueueA.Controllers
                 {
                     vote = new AnswerVote { UserId = userId, AnswerId = answerId, IsUpvote = false };
                     db.AnswerVotes.Add(vote);
+                    answer.User.Reputation -= 5;
                 }
                 else
                 {
                     if (!vote.IsUpvote)
                     {
                         db.AnswerVotes.Remove(vote);
+                        answer.User.Reputation += 5;
                     }
                     else
                     {
                         vote.IsUpvote = false;
+                        answer.User.Reputation -= 10;
                     }
                 }
 
