@@ -1,14 +1,11 @@
-﻿@using MITT_QueueA.Models;
-@model ICollection<MITT_QueueA.Models.Question>
+﻿@using MITT_QueueA.Models
+@model IEnumerable<Question>
 @{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = ViewBag.Tag.Name;
 }
 
-<div class="jumbotron">
-    <h1 class="text-center">Queue&A</h1>
-</div>
 <div>
-    <h2>New Questions</h2>
+    <h2>Questions Tagged With: @ViewBag.Tag.Name</h2>
     <form method="get">
         <input name="page" type="number" value="@ViewBag.Page" hidden />
         <select name="sort" id="sort-mode">
@@ -57,4 +54,3 @@
         });
     </script>
 }
-

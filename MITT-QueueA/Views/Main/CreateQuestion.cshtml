@@ -27,8 +27,9 @@
         </div>
         <h4><b>Add Tags:</b></h4>
         <div>
-            <div class="tag-wrapper"></div>
+            <div class="tag-wrapper" id="tag-container"></div>
             <input class="awesomplete" type="text" data-list="@ViewBag.Tags" data-minchars="1" id="add-tag" name="add-tag" />
+            <div id="tag-feedback" hidden></div>
             <button id="add-tag-button">Add</button>
         </div>
 
@@ -47,4 +48,57 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/Scripts/awesomplete.min.js")
+    <script>
+        const addInput = document.getElementById("add-tag");
+        const addButton = document.getElementById("add-tag-button");
+        const tagContainer = document.getElementById("tag-container");
+        const tagFeedback = document.getElementById("tag-feedback");
+        const addTag = tagName => {
+            const span = document.createElement("span");
+            span.innerHTML = `<input name="Tags" hidden value="${tagName}" />${tagName}`;
+            const removeSpan = document.createElement("span");
+            removeSpan.innerHTML = "X";
+            removeSpan.classList.add("tag-remove");
+            const removeFunc = (function () {
+                this.remove();
+            }).bind(span);
+            removeSpan.addEventListener("click", removeFunc);
+            span.appendChild(removeSpan);
+            tagContainer.appendChild(span);
+        };
+
+        const validateTag = tagName => {
+            if (tagName.length < 2 || tagName.length > 10) {
+                tagFeedback.hidden = false;
+                tagFeedback.innerText = "Tag Length Must Be Between 2 and 10";
+                return false;
+            }
+            //else if (tagName.contains(" ")) {
+            //    tagFeedback.hidden = false;
+            //    tagFeedback.innerText = "Tag May Not Contain Spaces";
+            //    return false;
+            //}
+
+            tagFeedback.hidden = true;
+            return true;
+        };
+
+        addButton.addEventListener("click", e => {
+            e.preventDefault();
+            if (validateTag(addInput.value)) {
+                addTag(addInput.value);
+                addInput.value = "";
+            }
+        });
+
+        addInput.addEventListener("keypress", e => {
+            if (e.key == "Enter") {
+                e.preventDefault();
+                if (validateTag(addInput.value)) {
+                    addTag(addInput.value);
+                    addInput.value = "";
+                }
+            }
+        });
+    </script>
 }

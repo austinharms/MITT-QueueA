@@ -26,6 +26,12 @@
             <h6><b>User:</b> @Html.DisplayFor(model => model.User.Email) <b>Date:</b> @Html.DisplayFor(model => model.DateAsked)</h6>
             <hr>
             <h3>@ViewBag.QuestionAnswer.Content</h3>
+            <div class="tag-wrapper">
+                @foreach (Tag t in Model.Tags)
+                {
+                    <span class="question-tag">@t.Name</span>
+                }
+            </div>
             <hr>
         </div>
         <div class="comments-wrapper">

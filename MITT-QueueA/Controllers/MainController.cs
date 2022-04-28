@@ -18,13 +18,46 @@ namespace MITT_QueueA.Controllers
         private const int PAGESIZE = 10;
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        public async Task<ActionResult> Index(int? page = 1)
+        public async Task<ActionResult> Index(int page = 1, int sort = 0)
         {
             int questionCount = await db.Questions.CountAsync();
             ViewBag.PageCount = (int)Math.Ceiling((double)questionCount / PAGESIZE);
-            int pg = page ?? 1;
-            if (pg < 1 || pg > ViewBag.PageCount) pg = 1;
-            return View(await db.Questions.OrderBy(q => q.DateAsked).Skip((pg - 1) * PAGESIZE).Take(PAGESIZE).ToListAsync());
+            ViewBag.Sort = sort;
+            if (page < 1 || page > ViewBag.PageCount) page = 1;
+            ViewBag.Page = page;
+            if (sort == 1)
+            {
+                return View(await db.Questions.OrderByDescending(q => q.Answers.Count()).Skip((page - 1) * PAGESIZE).Take(PAGESIZE).ToListAsync());
+            }
+            else
+            {
+                return View(await db.Questions.OrderBy(q => q.DateAsked).Skip((page - 1) * PAGESIZE).Take(PAGESIZE).ToListAsync());
+            }
+        }
+
+        public async Task<ActionResult> Tags(int id = -1, int page = 1, int sort = 0)
+        {
+            if (id == -1)
+                return HttpNotFound();
+
+            Tag t = await db.Tags.FindAsync(id);
+            if (t == null)
+                return HttpNotFound();
+
+            int questionCount = t.Questions.Count();
+            ViewBag.PageCount = (int)Math.Ceiling((double)questionCount / PAGESIZE);
+            ViewBag.Tag = t;
+            ViewBag.Sort = sort;
+            if (page < 1 || page > ViewBag.PageCount) page = 1;
+            ViewBag.Page = page;
+            if (sort == 1)
+            {
+                return View(t.Questions.OrderByDescending(q => q.Answers.Count()).Skip((page - 1) * PAGESIZE).Take(PAGESIZE).ToArray());
+            }
+            else
+            {
+                return View(t.Questions.OrderBy(q => q.DateAsked).Skip((page - 1) * PAGESIZE).Take(PAGESIZE).ToArray());
+            }
         }
 
         public async Task<ActionResult> Details(int? id)
@@ -41,10 +74,10 @@ namespace MITT_QueueA.Controllers
         }
 
         // GET: Questions/Create
-        public ActionResult CreateQuestion()
+        public async Task<ActionResult> CreateQuestion()
         {
             if (!Request.IsAuthenticated) return RedirectToAction("Login", "Account");
-            ViewBag.Tags = "Test0, Test1, Test2, Test3, Test4, Test5";
+            ViewBag.Tags = String.Join(", ", await db.Tags.Select(t => t.Name).ToListAsync());
             return View();
         }
 
@@ -63,11 +96,23 @@ namespace MITT_QueueA.Controllers
                 Question q = new Question { DateAsked = DateTime.Now, UserId = id, Title = question.Title };
                 db.Questions.Add(q);
                 db.Answers.Add(new Answer { QuestionId = q.Id, IsQuestion = true, AcceptedAnswer = false, Content = question.Content, DateAnswered = DateTime.Now, UserId = id });
+                foreach (string tagString in question.Tags)
+                {
+                    Tag tag = await db.Tags.FirstOrDefaultAsync(t => t.Name == tagString);
+                    if (tag == null)
+                    {
+                        tag = new Tag { Name = tagString };
+                        db.Tags.Add(tag);
+                    }
+
+                    q.Tags.Add(tag);
+                }
+
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Tags = "Test0, Test1, Test2, Test3, Test4, Test5";
+            ViewBag.Tags = String.Join(", ", await db.Tags.Select(t => t.Name).ToListAsync());
             return View(question);
         }
 
@@ -213,7 +258,7 @@ namespace MITT_QueueA.Controllers
             if (answer.AcceptedAnswer)
             {
                 answer.AcceptedAnswer = false;
-            } 
+            }
             else
             {
                 Answer acceptedAnswer = await db.Answers.FirstOrDefaultAsync(a => a.AcceptedAnswer && a.QuestionId == answer.QuestionId);
