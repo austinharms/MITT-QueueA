@@ -44,6 +44,7 @@ namespace MITT_QueueA.Controllers
         public ActionResult CreateQuestion()
         {
             if (!Request.IsAuthenticated) return RedirectToAction("Login", "Account");
+            ViewBag.Tags = "Test0, Test1, Test2, Test3, Test4, Test5";
             return View();
         }
 
@@ -66,6 +67,7 @@ namespace MITT_QueueA.Controllers
                 return RedirectToAction("Index");
             }
 
+            ViewBag.Tags = "Test0, Test1, Test2, Test3, Test4, Test5";
             return View(question);
         }
 
