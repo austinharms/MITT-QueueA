@@ -12,7 +12,7 @@
     <form method="get">
         <input name="page" type="number" value="@ViewBag.Page" hidden />
         <span class="small-font">Sort: </span>
-        <select name="sort" id="sort-mode">
+        <select name="sort" id="sort-mode" class="form-control inline-block" style="width: auto">
             <option @(ViewBag.Sort == 0 ? "Selected" : "") value="0">Newest</option>
             <option @(ViewBag.Sort == 1 ? "Selected" : "") value="1">Most Answers</option>
         </select>
