@@ -5,7 +5,7 @@
     ViewBag.QuestionAnswer = Model.Answers.First(a => a.IsQuestion);
 }
 <div>
-    <div class="question-rep-wrapper">
+    <div class="question-rep-wrapper title">
         <div class="question-rep">
             @using (Html.BeginForm("UpvoteAnswer", "Main"))
             {
@@ -23,109 +23,28 @@
         </div>
         <div class="question-wrapper">
             <div class="question">
-                <h2>@Model.Title</h2>
-                <h6><b>User:</b> @Html.DisplayFor(model => model.User.Email) <b>Date:</b> @Html.DisplayFor(model => model.DateAsked)</h6>
-                <hr>
+                <h2><b>@Model.Title</b></h2>
                 <h3>@ViewBag.QuestionAnswer.Content</h3>
-                <div class="tag-wrapper">
-                    @foreach (Tag t in Model.Tags)
-                    {
-                        <span class="question-tag">@t.Name</span>
-                    }
+                <div class="border-separate">
+                    <h6><b>User:</b> @Html.DisplayFor(model => model.User.Email)  • @Model.User.Reputation <b>Date:</b> @Html.DisplayFor(model => model.DateAsked)</h6>
+                    <div class="tag-wrapper">
+                        @foreach (Tag t in Model.Tags)
+                        {
+                            <span class="question-tag">@t.Name</span>
+                        }
+                    </div>
                 </div>
-                <hr>
             </div>
+            <h5>Comments:</h5>
             <div class="comments-wrapper">
-                <h5>Comments:</h5>
                 @foreach (Comment c in ViewBag.QuestionAnswer.Comments)
                 {
                     <div class="comment">
                         <h4>@c.Message</h4>
-                        <h6><b>User:</b> @Html.DisplayFor(model => model.User.Email) <b>Date:</b> @Html.DisplayFor(model => model.DateAsked)</h6>
+                        <h6><b>User:</b> @c.User.Email • @c.User.Reputation <b>Date:</b> @c.DateAdded.ToString()</h6>
                     </div>
                 }
-                <div class="create-comment">
-                    @if (Request.IsAuthenticated)
-                    {
-                        <h5>Add Comment:</h5>
-                        using (Html.BeginForm("AddComment", "Main"))
-                        {
-                            @Html.AntiForgeryToken()
-                            <input hidden type="number" name="answerId" value="@ViewBag.QuestionAnswer.Id" />
-                            <input hidden type="number" name="questionId" value="@Model.Id" />
-                            <input type="text" name="Message" data-val="true" data-val-required="Answer length must be between 3 and 500. " data-val-length="Answer length must be between 3 and 500." data-val-length-max="500" data-val-length-min="3" value="@((ViewBag.Comment != null && ViewBag.Comment.AnswerId == ViewBag.QuestionAnswer.Id)?ViewBag.Comment.Message:"")" />
-                            <input type="submit" value="Post" class="btn btn-default" />
-                            <div class="field-validation-valid text-danger" data-valmsg-for="Message" data-valmsg-replace="true"></div>
-                        }
-                    }
-                    else
-                    {
-                        <h6>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" }) to add Comments</h6>
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="answers-wrapper">
-        <h2>Answers:</h2>
-        @foreach (Answer a in Model.Answers)
-        {
-            if (a.IsQuestion)
-            {
-                continue;
-            }
-
-            <div class="answer-wrapper">
-                <div class="answer-rep">
-                    @using (Html.BeginForm("UpvoteAnswer", "Main"))
-                    {
-                        @Html.AntiForgeryToken()
-                        <input type="number" name="answerId" hidden value="@a.Id" />
-                        <input type="submit" value="Upvote" @((!Request.IsAuthenticated || ViewBag.UserId == a.UserId) ? "disabled" : "") class="btn btn-default" />
-                    }
-                    @(a.Rating)
-                    @using (Html.BeginForm("DownvoteAnswer", "Main"))
-                    {
-                        @Html.AntiForgeryToken()
-                        <input type="number" name="answerId" hidden value="@a.Id" />
-                        <input type="submit" value="Downvote" @((!Request.IsAuthenticated || ViewBag.UserId == a.UserId) ? "disabled" : "") class="btn btn-default" />
-                    }
-
-                    @if (Model.UserId == ViewBag.UserId)
-                    {
-
-                        using (Html.BeginForm("MarkAnswerCorrect", "Main"))
-                        {
-                            @Html.AntiForgeryToken()
-                            <input type="number" name="answerId" hidden value="@a.Id" />
-                            <input type="submit" value="Mark @(a.AcceptedAnswer?"Unc":"C")orrect" class="btn btn-default" />
-                        }
-                    }
-                    else
-                    {
-                        if (a.AcceptedAnswer)
-                        {
-                            <p>Accepted</p>
-                        }
-                    }
-                </div>
-                <div class="answer">
-                    <h3>@a.Content</h3>
-                    <h6><b>User:</b> @a.User.Email, <b>Date:</b> @a.DateAnswered</h6>
-                </div>
-                <div class="comments-wrapper">
-                    @if (a.Comments.Count > 0)
-                    {
-                        <h5>Comments:</h5>
-                        foreach (Comment c in a.Comments)
-                        {
-                            <div class="comment">
-                                <h4>@c.Message</h4>
-                                <h6><b>User:</b> @Html.DisplayFor(model => model.User.Email) <b>Date:</b> @Html.DisplayFor(model => model.DateAsked)</h6>
-                            </div>
-                        }
-                    }
-
+                <div class="comment">
                     <div class="create-comment">
                         @if (Request.IsAuthenticated)
                         {
@@ -133,10 +52,10 @@
                             using (Html.BeginForm("AddComment", "Main"))
                             {
                                 @Html.AntiForgeryToken()
-                                <input hidden type="number" name="answerId" value="@a.Id" />
+                                <input hidden type="number" name="answerId" value="@ViewBag.QuestionAnswer.Id" />
                                 <input hidden type="number" name="questionId" value="@Model.Id" />
-                                <input type="text" name="Message" data-val="true" data-val-required="Answer length must be between 3 and 500. " data-val-length="Answer length must be between 3 and 500." data-val-length-max="500" data-val-length-min="3" value="@((ViewBag.Comment != null && ViewBag.Comment.AnswerId == a.Id)?ViewBag.Comment.Message:"")" />
-                                <input type="submit" value="Post" class="btn btn-default" />
+                                <input type="text" class="form-control auto-width inline-block" name="Message" data-val="true" data-val-required="Answer length must be between 3 and 500. " data-val-length="Answer length must be between 3 and 500." data-val-length-max="500" data-val-length-min="3" value="@((ViewBag.Comment != null && ViewBag.Comment.AnswerId == ViewBag.QuestionAnswer.Id)?ViewBag.Comment.Message:"")" />
+                                <input type="submit" value="Post" class="form-control auto-width inline-block" />
                                 <div class="field-validation-valid text-danger" data-valmsg-for="Message" data-valmsg-replace="true"></div>
                             }
                         }
@@ -147,24 +66,113 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="indent">
+        <h2>Answers:</h2>
+    </div>
+    <div class="answers-wrapper">
+        @foreach (Answer a in Model.Answers)
+        {
+            if (a.IsQuestion)
+            {
+                continue;
+            }
+
+            <div class="answer-rep-wrapper">
+                <div>
+                    <div class="answer-rep">
+                        @using (Html.BeginForm("UpvoteAnswer", "Main"))
+                        {
+                            @Html.AntiForgeryToken()
+                            <input type="number" name="answerId" hidden value="@a.Id" />
+                            <input type="submit" value="&#10151;" @((!Request.IsAuthenticated || ViewBag.UserId == a.UserId) ? "disabled" : "") class="upvote @(a.UserUpvote?"enabled":"")" />
+                        }
+                        <span class="rating">@(a.Rating)</span>
+                        @using (Html.BeginForm("DownvoteAnswer", "Main"))
+                        {
+                            @Html.AntiForgeryToken()
+                            <input type="number" name="answerId" hidden value="@a.Id" />
+                            <input type="submit" value="&#10151;" @((!Request.IsAuthenticated || ViewBag.UserId == a.UserId) ? "disabled" : "") class="downvote @(a.UserDownvote?"enabled":"")" />
+                        }
+                    </div>
+                    @if (Model.UserId == ViewBag.UserId)
+                    {
+                        using (Html.BeginForm("MarkAnswerCorrect", "Main"))
+                        {
+                            @Html.AntiForgeryToken()
+                            <input type="number" name="answerId" hidden value="@a.Id" />
+                            <input type="submit" value="✔" class="accepted-answer @(a.AcceptedAnswer?"enabled":"")" />
+                        }
+                    }
+                    else if (a.AcceptedAnswer)
+                    {
+                        <span class="accepted-answer enabled">✔</span>
+                    }
+                </div>
+                <div class="answer-wrapper">
+                    <div class="answer">
+                        <h3>@a.Content</h3>
+                        <div class="border-separate">
+                            <h6><b>User:</b> @a.User.Email • @a.User.Reputation, <b>Date:</b> @a.DateAnswered</h6>
+                        </div>
+                    </div>
+                    <h5>Comments:</h5>
+                    <div class="comments-wrapper">
+                        @if (a.Comments.Count > 0)
+                        {
+                            foreach (Comment c in a.Comments)
+                            {
+                                <div class="comment">
+                                    <h4>@c.Message</h4>
+                                    <h6><b>User:</b> @c.User.Email • @c.User.Reputation <b>Date:</b> @c.DateAdded.ToString()</h6>
+                                </div>
+                            }
+                        }
+                        <div class="comment">
+                            <div class="create-comment">
+                                @if (Request.IsAuthenticated)
+                                {
+                                    <h5>Add Comment:</h5>
+                                    using (Html.BeginForm("AddComment", "Main"))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <input hidden type="number" name="answerId" value="@a.Id" />
+                                        <input hidden type="number" name="questionId" value="@Model.Id" />
+                                        <input type="text" name="Message" class="form-control auto-width inline-block" data-val="true" data-val-required="Answer length must be between 3 and 500. " data-val-length="Answer length must be between 3 and 500." data-val-length-max="500" data-val-length-min="3" value="@((ViewBag.Comment != null && ViewBag.Comment.AnswerId == a.Id)?ViewBag.Comment.Message:"")" />
+                                        <input type="submit" value="Post" class="form-control auto-width inline-block" />
+                                        <div class="field-validation-valid text-danger" data-valmsg-for="Message" data-valmsg-replace="true"></div>
+                                    }
+                                }
+                                else
+                                {
+                                    <h6>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" }) to add Comments</h6>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         }
-        <div class="create-answer">
-            <h4>Add Answer:</h4>
-            @if (Request.IsAuthenticated)
-            {
-                using (Html.BeginForm("AddAnswer", "Main"))
+        <div class="answer-rep-wrapper">
+            <div class="create-answer">
+                @if (Request.IsAuthenticated)
                 {
-                    @Html.AntiForgeryToken()
-                    <input hidden type="number" name="questionId" value="@Model.Id" />
-                    <textarea name="Content" data-val="true" data-val-required="This " data-val-length="Answer length must be between 10 and 2000." data-val-length-max="2000" data-val-length-min="10">@(ViewBag.Answer == null?"":ViewBag.Answer.Content)</textarea>
-                    <div class="field-validation-valid text-danger" data-valmsg-for="Content" data-valmsg-replace="true"></div>
-                    <input type="submit" value="Post" class="btn btn-default" />
+                    <h4>Add Answer:</h4>
+                    using (Html.BeginForm("AddAnswer", "Main"))
+                    {
+                        @Html.AntiForgeryToken()
+                        <input hidden type="number" name="questionId" value="@Model.Id" />
+                        <textarea name="Content" class="form-control" data-val="true" data-val-required="This " data-val-length="Answer length must be between 10 and 2000." data-val-length-max="2000" data-val-length-min="10">@(ViewBag.Answer == null?"":ViewBag.Answer.Content)</textarea>
+                        <div class="field-validation-valid text-danger" data-valmsg-for="Content" data-valmsg-replace="true"></div>
+                        <input type="submit" value="Post" class="btn btn-default" />
+                    }
                 }
-            }
-            else
-            {
-                <h5>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" }) to add Answers</h5>
-            }
+                else
+                {
+                    <h5>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" }) to add Answers</h5>
+                }
+            </div>
         </div>
     </div>
 </div>

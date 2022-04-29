@@ -35,7 +35,7 @@ textarea {
 .title {
     margin: 0;
     border-radius: 0 0 20px 20px;
-    background-color: #e8e8e8;
+    background-color: #f6f6f6;
     padding: 30px;
     width: 100%;
 }
@@ -60,11 +60,13 @@ textarea {
 }
 
     .question-list .question-row:first-child {
-        border-radius: 20px 20px 0 0;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
     }
 
     .question-list .question-row:last-child {
-        border-radius: 0 0 20px 20px;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
     }
 
 .question-row {
@@ -94,8 +96,8 @@ textarea {
     }
 
 .question-tag {
-    background-color: #fff370;
-    border: 2px solid #ffde24;
+    background-color: #cbcbcb;
+    border: 1px solid #222222;
     border-radius: 10px;
     padding: 2px 5px;
 }
@@ -138,32 +140,169 @@ textarea {
         width: 1.2em;
     }
 
-.downvote {
-    position: absolute;
-    background-color: transparent;
-    border: none;
-    font-size: 1.5em;
-    color: #b01414;
-    transform: rotate(90deg);
-    bottom: 0;
-    left: -0.3em;
-}
-
-    .downvote .enabled {
-        color: #ff0000;
+    .question-rep .downvote {
+        position: absolute;
+        background-color: transparent;
+        border: none;
+        font-size: 1.5em;
+        transform: rotate(90deg);
+        bottom: 0;
+        left: -0.3em;
     }
 
-.upvote {
-    position: absolute;
-    top: 0;
-    left: -0.5em;
-    background-color: transparent;
-    border: none;
-    font-size: 1.5em;
-    color: #d76625;
-    transform: rotate(270deg);
+    .question-rep .upvote {
+        position: absolute;
+        top: 0;
+        left: -0.5em;
+        background-color: transparent;
+        border: none;
+        font-size: 1.5em;
+        transform: rotate(270deg);
+    }
+
+.border-separate {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
 }
 
-    .upvote .enabled {
-        color: #ff5d00;
+.indent {
+    margin-left: 30px;
+}
+
+.auto-width {
+    width: auto;
+}
+
+.answer-rep-wrapper {
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    padding: 10px 20px;
+    border-bottom: 1px solid black;
+}
+
+.answer-rep {
+    margin-top: 20px;
+    font-size: 1.75em;
+    position: relative;
+    margin-right: 20px;
+}
+
+    .answer-rep .upvote {
+        position: absolute;
+        bottom: 1.3rem;
+        right: -0.4rem;
+        background-color: transparent;
+        border: none;
+        margin: 0;
+        padding: 0;
+        transform: rotate(270deg);
+        font-size: 1.5em;
+    }
+
+    .answer-rep .downvote {
+        position: absolute;
+        top: 1.1rem;
+        right: -0.4rem;
+        background-color: transparent;
+        border: none;
+        margin: 0;
+        padding: 0;
+        transform: rotate(90deg);
+        font-size: 1.5em;
+    }
+
+.answer-wrapper {
+    display: inline-block;
+}
+
+.accepted-answer {
+    background-color: transparent;
+    border: none;
+    margin: 0;
+    margin-top: 0.4em;
+    padding: 0;
+    font-size: 2em;
+    color: gray;
+}
+
+span.accepted-answer {
+    display: block;
+}
+
+.accepted-answer.enabled {
+    color: limegreen;
+}
+
+.answers-wrapper {
+    padding: 10px;
+}
+
+    .answers-wrapper .answer-rep-wrapper:first-child {
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+    }
+
+    .answers-wrapper .answer-rep-wrapper:last-child {
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+    }
+
+.answer-rep-wrapper:nth-child(odd) {
+    background-color: #f6f6f6;
+}
+
+.answer-rep-wrapper:nth-child(even) {
+    background-color: #e8e8e8;
+}
+
+.comments-wrapper {
+    padding: 10px;
+}
+
+    .comments-wrapper .comment:first-child {
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+    }
+
+    .comments-wrapper .comment:last-child {
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+    }
+
+.comment:nth-child(odd) {
+    background-color: #cbcbcb;
+}
+
+.comment:nth-child(even) {
+    background-color: #e8e8e8;
+}
+
+.comment {
+    padding: 3px 10px;
+    border-bottom: 1px solid black;
+}
+
+.upvote {
+    color: #324c69;
+}
+
+    .upvote:disabled {
+        color: #cbcbcb;
+    }
+
+    .upvote.enabled {
+        color: #0034ff;
+    }
+
+.downvote {
+    color: #7a2c2c;
+}
+
+    .downvote:disabled {
+        color: #cbcbcb;
+    }
+
+    .downvote.enabled {
+        color: #e61414;
     }
