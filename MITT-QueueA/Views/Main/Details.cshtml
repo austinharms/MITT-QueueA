@@ -30,7 +30,9 @@
                     <div class="tag-wrapper">
                         @foreach (Tag t in Model.Tags)
                         {
-                            <span class="question-tag">@t.Name</span>
+                            <a href="/Main/Tags/@t.Id">
+                                <span class="question-tag">@t.Name</span>
+                            </a>
                         }
                     </div>
                 </div>
@@ -54,7 +56,7 @@
                                 @Html.AntiForgeryToken()
                                 <input hidden type="number" name="answerId" value="@ViewBag.QuestionAnswer.Id" />
                                 <input hidden type="number" name="questionId" value="@Model.Id" />
-                                <input type="text" class="form-control auto-width inline-block" name="Message" data-val="true" data-val-required="Answer length must be between 3 and 500. " data-val-length="Answer length must be between 3 and 500." data-val-length-max="500" data-val-length-min="3" value="@((ViewBag.Comment != null && ViewBag.Comment.AnswerId == ViewBag.QuestionAnswer.Id)?ViewBag.Comment.Message:"")" />
+                                <input type="text" class="form-control auto-width inline-block" name="Message" data-val="true" data-val-required="Comment length must be between 3 and 500. " data-val-length="Comment length must be between 3 and 500." data-val-length-max="500" data-val-length-min="3" value="@((ViewBag.Comment != null && ViewBag.Comment.AnswerId == ViewBag.QuestionAnswer.Id)?ViewBag.Comment.Message:"")" />
                                 <input type="submit" value="Post" class="form-control auto-width inline-block" />
                                 <div class="field-validation-valid text-danger" data-valmsg-for="Message" data-valmsg-replace="true"></div>
                             }
@@ -139,7 +141,7 @@
                                         @Html.AntiForgeryToken()
                                         <input hidden type="number" name="answerId" value="@a.Id" />
                                         <input hidden type="number" name="questionId" value="@Model.Id" />
-                                        <input type="text" name="Message" class="form-control auto-width inline-block" data-val="true" data-val-required="Answer length must be between 3 and 500. " data-val-length="Answer length must be between 3 and 500." data-val-length-max="500" data-val-length-min="3" value="@((ViewBag.Comment != null && ViewBag.Comment.AnswerId == a.Id)?ViewBag.Comment.Message:"")" />
+                                        <input type="text" name="Message" class="form-control auto-width inline-block" data-val="true" data-val-required="Comment length must be between 3 and 500. " data-val-length="Comment length must be between 3 and 500." data-val-length-max="500" data-val-length-min="3" value="@((ViewBag.Comment != null && ViewBag.Comment.AnswerId == a.Id)?ViewBag.Comment.Message:"")" />
                                         <input type="submit" value="Post" class="form-control auto-width inline-block" />
                                         <div class="field-validation-valid text-danger" data-valmsg-for="Message" data-valmsg-replace="true"></div>
                                     }
@@ -163,7 +165,7 @@
                     {
                         @Html.AntiForgeryToken()
                         <input hidden type="number" name="questionId" value="@Model.Id" />
-                        <textarea name="Content" class="form-control" data-val="true" data-val-required="This " data-val-length="Answer length must be between 10 and 2000." data-val-length-max="2000" data-val-length-min="10">@(ViewBag.Answer == null?"":ViewBag.Answer.Content)</textarea>
+                        <textarea name="Content" class="form-control" data-val="true" data-val-required="Answer length must be between 10 and 2000. " data-val-length="Answer length must be between 10 and 2000." data-val-length-max="2000" data-val-length-min="10">@(ViewBag.Answer == null?"":ViewBag.Answer.Content)</textarea>
                         <div class="field-validation-valid text-danger" data-valmsg-for="Content" data-valmsg-replace="true"></div>
                         <input type="submit" value="Post" class="btn btn-default" />
                     }

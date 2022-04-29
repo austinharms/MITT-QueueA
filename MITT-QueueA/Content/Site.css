@@ -95,6 +95,11 @@ textarea {
         vertical-align: text-bottom;
     }
 
+.tag-wrapper a {
+    color: black;
+    text-decoration: none;
+}
+
 .question-tag {
     background-color: #cbcbcb;
     border: 1px solid #222222;
@@ -312,7 +317,7 @@ footer a {
     text-decoration: none;
 }
 
-footer a:hover {
-    text-decoration: none;
-    color: white;
-}
+    footer a:hover {
+        text-decoration: none;
+        color: white;
+    }
