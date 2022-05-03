@@ -26,7 +26,7 @@
                 <h2><b>@Model.Title</b></h2>
                 <h3>@ViewBag.QuestionAnswer.Content</h3>
                 <div class="border-separate">
-                    <h6><b>User:</b> @Html.DisplayFor(model => model.User.Email)  • @Model.User.Reputation <b>Date:</b> @Html.DisplayFor(model => model.DateAsked)</h6>
+                    <h6><b>User:</b> @WebFormater.GetUsernameHTMLString(Model.User) <b>Added:</b> @WebFormater.GetDateString(Model.DateAsked)</h6>
                     <div class="tag-wrapper">
                         @foreach (Tag t in Model.Tags)
                         {
@@ -43,7 +43,7 @@
                 {
                     <div class="comment">
                         <h4>@c.Message</h4>
-                        <h6><b>User:</b> @c.User.Email • @c.User.Reputation <b>Date:</b> @c.DateAdded.ToString()</h6>
+                        <h6><b>User:</b> @WebFormater.GetUsernameHTMLString(c.User) <b>Added:</b> @WebFormater.GetDateString(c.DateAdded)</h6>
                     </div>
                 }
                 <div class="comment">
@@ -116,7 +116,7 @@
                     <div class="answer">
                         <h3>@a.Content</h3>
                         <div class="border-separate">
-                            <h6><b>User:</b> @a.User.Email • @a.User.Reputation, <b>Date:</b> @a.DateAnswered</h6>
+                            <h6><b>User:</b> @WebFormater.GetUsernameHTMLString(a.User) <b>Added:</b> @WebFormater.GetDateString(a.DateAnswered)</h6>
                         </div>
                     </div>
                     <h5>Comments:</h5>
@@ -127,7 +127,7 @@
                             {
                                 <div class="comment">
                                     <h4>@c.Message</h4>
-                                    <h6><b>User:</b> @c.User.Email • @c.User.Reputation <b>Date:</b> @c.DateAdded.ToString()</h6>
+                                    <h6><b>User:</b> @WebFormater.GetUsernameHTMLString(c.User) <b>Added:</b> @WebFormater.GetDateString(c.DateAdded)</h6>
                                 </div>
                             }
                         }

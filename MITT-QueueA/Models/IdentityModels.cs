@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace MITT_QueueA.Models
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<Answer> Answers { get; set; }
         public virtual ICollection<AnswerVote> AnswerVotes { get; set; }
-        public virtual ICollection<QuestionVote> QuestionVotes { get; set; }
+        public virtual ICollection<IdentityRole> IdentityRoles { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
@@ -32,7 +33,6 @@ namespace MITT_QueueA.Models
         public DbSet<Answer> Answers { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<Comment> Comments { get; set; }
-        public DbSet<QuestionVote> QuestionVotes { get; set; }
         public DbSet<AnswerVote> AnswerVotes { get; set; }
 
         public ApplicationDbContext()

@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using MITT_QueueA.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace MITT_QueueA.Controllers
 {
@@ -197,6 +198,12 @@ namespace MITT_QueueA.Controllers
                     answer.User.Reputation += 5;
                     vote = new AnswerVote { UserId = userId, AnswerId = answerId, IsUpvote = true };
                     db.AnswerVotes.Add(vote);
+                    if (answer.User.Reputation >= 100)
+                    {
+                        IdentityRole goldRole = await db.Roles.FirstOrDefaultAsync(r => r.Name == "Gold");
+                        if (goldRole != null && !answer.User.IdentityRoles.Contains(goldRole))
+                            answer.User.IdentityRoles.Add(goldRole);
+                    }
                 }
                 else
                 {
@@ -209,6 +216,12 @@ namespace MITT_QueueA.Controllers
                     {
                         vote.IsUpvote = true;
                         answer.User.Reputation += 10;
+                        if (answer.User.Reputation >= 100)
+                        {
+                            IdentityRole goldRole = await db.Roles.FirstOrDefaultAsync(r => r.Name == "Gold");
+                            if (goldRole != null && answer.User.Roles.FirstOrDefault(r => r.RoleId == goldRole.Id) == null)
+                                answer.User.Roles.Add(new IdentityUserRole { UserId = answer.UserId, RoleId = goldRole.Id });
+                        }
                     }
                 }
 
@@ -243,6 +256,12 @@ namespace MITT_QueueA.Controllers
                     {
                         db.AnswerVotes.Remove(vote);
                         answer.User.Reputation += 5;
+                        if (answer.User.Reputation >= 100)
+                        {
+                            IdentityRole goldRole = await db.Roles.FirstOrDefaultAsync(r => r.Name == "Gold");
+                            if (goldRole != null && answer.User.Roles.FirstOrDefault(r => r.RoleId == goldRole.Id) == null)
+                                answer.User.Roles.Add(new IdentityUserRole { UserId = answer.UserId, RoleId = goldRole.Id });
+                        }
                     }
                     else
                     {

@@ -19,11 +19,9 @@ namespace MITT_QueueA.Models
         public virtual ICollection<Answer> Answers { get; set; }
         public virtual ICollection<Tag> Tags { get; set; }
         public virtual ApplicationUser User { get; set; }
-        public virtual ICollection<QuestionVote> UserVotes { get; set; }
 
         public Question()
         {
-            UserVotes = new List<QuestionVote>();
             Answers = new HashSet<Answer>();
             Tags = new HashSet<Tag>();
         }
