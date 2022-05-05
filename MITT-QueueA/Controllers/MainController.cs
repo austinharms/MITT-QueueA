@@ -19,6 +19,7 @@ namespace MITT_QueueA.Controllers
         private const int PAGESIZE = 10;
         private ApplicationDbContext db = new ApplicationDbContext();
 
+        [AllowAnonymous]
         public async Task<ActionResult> Index(int page = 1, int sort = 0)
         {
             int questionCount = await db.Questions.CountAsync();
@@ -36,6 +37,7 @@ namespace MITT_QueueA.Controllers
             }
         }
 
+        [AllowAnonymous]
         public async Task<ActionResult> Tags(int id = -1, int page = 1, int sort = 0)
         {
             if (id == -1)
@@ -61,6 +63,7 @@ namespace MITT_QueueA.Controllers
             }
         }
 
+        [AllowAnonymous]
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
@@ -93,22 +96,18 @@ namespace MITT_QueueA.Controllers
             return View(question);
         }
 
-        // GET: Questions/Create
+        [Authorize]
         public async Task<ActionResult> CreateQuestion()
         {
-            if (!Request.IsAuthenticated) return RedirectToAction("Login", "Account");
             ViewBag.Tags = String.Join(", ", await db.Tags.Select(t => t.Name).ToListAsync());
             return View();
         }
 
-        // POST: Questions/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<ActionResult> CreateQuestion(CreateQuestion question)
         {
-            if (!Request.IsAuthenticated) return RedirectToAction("Login", "Account");
             if (ModelState.IsValid)
             {
                 string id = User.Identity.GetUserId();
@@ -138,10 +137,9 @@ namespace MITT_QueueA.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<ActionResult> AddAnswer([Bind(Include = "Content,QuestionId")] Answer answer)
         {
-            if (!Request.IsAuthenticated)
-                return RedirectToAction("Login", "Account");
 
             if (ModelState.IsValid)
             {
@@ -163,9 +161,9 @@ namespace MITT_QueueA.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<ActionResult> AddComment([Bind(Include = "Message,AnswerId,QuestionId")] Comment comment)
         {
-            if (!Request.IsAuthenticated) return RedirectToAction("Login", "Account");
             if (ModelState.IsValid)
             {
                 string id = User.Identity.GetUserId();
@@ -182,9 +180,9 @@ namespace MITT_QueueA.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<ActionResult> UpvoteAnswer(int answerId)
         {
-            if (!Request.IsAuthenticated) return RedirectToAction("Login", "Account");
             Answer answer = await db.Answers.FindAsync(answerId);
             if (answer == null)
                 return HttpNotFound();
@@ -233,9 +231,9 @@ namespace MITT_QueueA.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<ActionResult> DownvoteAnswer(int answerId)
         {
-            if (!Request.IsAuthenticated) return RedirectToAction("Login", "Account");
             Answer answer = await db.Answers.FindAsync(answerId);
             if (answer == null)
                 return HttpNotFound();
@@ -278,9 +276,9 @@ namespace MITT_QueueA.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<ActionResult> MarkAnswerCorrect(int answerId)
         {
-            if (!Request.IsAuthenticated) return RedirectToAction("Login", "Account");
             Answer answer = await db.Answers.FindAsync(answerId);
             if (answer == null)
                 return HttpNotFound();
