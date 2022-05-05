@@ -223,6 +223,10 @@
     <Compile Include="Migrations\202205031456027_AddRoleCollectionToUser.designer.cs">
       <DependentUpon>202205031456027_AddRoleCollectionToUser.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202205051548283_RemoveUserRep.cs" />
+    <Compile Include="Migrations\202205051548283_RemoveUserRep.designer.cs">
+      <DependentUpon>202205051548283_RemoveUserRep.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Answer.cs" />
@@ -341,6 +345,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202205031456027_AddRoleCollectionToUser.resx">
       <DependentUpon>202205031456027_AddRoleCollectionToUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202205051548283_RemoveUserRep.resx">
+      <DependentUpon>202205051548283_RemoveUserRep.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

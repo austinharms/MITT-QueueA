@@ -5,13 +5,13 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.Linq;
 
 namespace MITT_QueueA.Models
 {
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit https://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
     {
-        public int Reputation { get; set; }
         public virtual ICollection<Question> Questions { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<Answer> Answers { get; set; }
@@ -25,6 +25,9 @@ namespace MITT_QueueA.Models
             // Add custom user claims here
             return userIdentity;
         }
+
+        [NotMapped]
+        public int Reputation { get => Answers.Sum(a => a.Rating * 5); }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>

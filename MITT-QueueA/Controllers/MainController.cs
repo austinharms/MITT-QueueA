@@ -84,7 +84,6 @@ namespace MITT_QueueA.Controllers
             string userId = User.Identity.GetUserId();
             question.Answers = question.Answers.Select(a =>
             {
-                a.Rating = a.UserVotes.Sum(v => v.IsUpvote ? 1 : -1);
                 AnswerVote vote = a.UserVotes.FirstOrDefault(v => v.UserId == userId);
                 if (vote != null)
                 {
@@ -202,7 +201,6 @@ namespace MITT_QueueA.Controllers
                 AnswerVote vote = await db.AnswerVotes.FirstOrDefaultAsync(v => v.AnswerId == answerId && v.UserId == userId);
                 if (vote == null)
                 {
-                    answer.User.Reputation += 5;
                     vote = new AnswerVote { UserId = userId, AnswerId = answerId, IsUpvote = true };
                     db.AnswerVotes.Add(vote);
                     if (answer.User.Reputation >= 100)
@@ -217,12 +215,10 @@ namespace MITT_QueueA.Controllers
                     if (vote.IsUpvote)
                     {
                         db.AnswerVotes.Remove(vote);
-                        answer.User.Reputation -= 5;
                     }
                     else
                     {
                         vote.IsUpvote = true;
-                        answer.User.Reputation += 10;
                         if (answer.User.Reputation >= 100)
                         {
                             IdentityRole goldRole = await db.Roles.FirstOrDefaultAsync(r => r.Name == "Gold");
@@ -255,14 +251,12 @@ namespace MITT_QueueA.Controllers
                 {
                     vote = new AnswerVote { UserId = userId, AnswerId = answerId, IsUpvote = false };
                     db.AnswerVotes.Add(vote);
-                    answer.User.Reputation -= 5;
                 }
                 else
                 {
                     if (!vote.IsUpvote)
                     {
                         db.AnswerVotes.Remove(vote);
-                        answer.User.Reputation += 5;
                         if (answer.User.Reputation >= 100)
                         {
                             IdentityRole goldRole = await db.Roles.FirstOrDefaultAsync(r => r.Name == "Gold");
@@ -273,7 +267,6 @@ namespace MITT_QueueA.Controllers
                     else
                     {
                         vote.IsUpvote = false;
-                        answer.User.Reputation -= 10;
                     }
                 }
 

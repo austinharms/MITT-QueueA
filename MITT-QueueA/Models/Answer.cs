@@ -33,7 +33,7 @@ namespace MITT_QueueA.Models
         }
 
         [NotMapped]
-        public int Rating { get; set; }
+        public int Rating { get => UserVotes.Sum(v => v.IsUpvote ? 1 : -1); }
         [NotMapped]
         public bool UserUpvote { get; set; } = false;
         [NotMapped]
