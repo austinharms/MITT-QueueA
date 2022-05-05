@@ -18,6 +18,14 @@ namespace MITT_QueueA.Controllers
     {
         private const int PAGESIZE = 10;
         private ApplicationDbContext db = new ApplicationDbContext();
+        //UserManager<ApplicationUser> userManager;
+        //RoleManager<IdentityRole> roleManager;
+
+        public MainController()
+        {
+            //userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            //roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(db));
+        }
 
         [AllowAnonymous]
         public async Task<ActionResult> Index(int page = 1, int sort = 0)
@@ -93,6 +101,7 @@ namespace MITT_QueueA.Controllers
                 return a;
             }).OrderByDescending(a => a.AcceptedAnswer).ThenByDescending(a => a.Rating).ThenByDescending(a => a.DateAnswered).ToList();
             ViewBag.UserId = User.Identity.GetUserId();
+            ViewBag.IsAdmin = Request.IsAuthenticated && User.IsInRole("Gold");
             return View(question);
         }
 
@@ -306,6 +315,19 @@ namespace MITT_QueueA.Controllers
 
             await db.SaveChangesAsync();
             return RedirectToAction("Details", new { id = answer.QuestionId });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles ="Gold")]
+        public async Task<ActionResult> DeleteQuestion(int questionId)
+        {
+            Question question = await db.Questions.FindAsync(questionId);
+            if (question == null)
+                return HttpNotFound();
+            db.Questions.Remove(question);
+            await db.SaveChangesAsync();
+            return RedirectToAction("Index");
         }
     }
 }

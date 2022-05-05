@@ -23,7 +23,18 @@
         </div>
         <div class="question-wrapper">
             <div class="question">
-                <h2><b>@Model.Title</b></h2>
+                <div class="flex-space">
+                    <h2><b>@Model.Title</b></h2>
+                    @if (ViewBag.IsAdmin)
+                    {
+                        using (Html.BeginForm("DeleteQuestion", "Main"))
+                        {
+                            @Html.AntiForgeryToken()
+                            <input type="number" name="questionId" hidden value="@Model.Id" />
+                            <input type="submit" value="Delete" class="btn btn-danger" />
+                        }
+                    }
+                </div>
                 <h3>@ViewBag.QuestionAnswer.Content</h3>
                 <div class="border-separate">
                     <h6><b>User:</b> @WebFormater.GetUsernameHTMLString(Model.User) <b>Added:</b> @WebFormater.GetDateString(Model.DateAsked)</h6>
