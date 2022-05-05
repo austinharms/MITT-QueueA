@@ -20,7 +20,7 @@
     {
         <div class="row question-row">
             <div class="inline-block question-rep">
-                @q.Answers.First(a => a.IsQuestion).UserVotes.Sum(v => v.IsUpvote ? 1 : -1)
+                @q.Answers.First(a => a.IsQuestion).Rating
             </div>
             <div class="inline-block">
                 <a href="/Main/Details/@q.Id">
@@ -32,7 +32,7 @@
                         <a href="/Main/Tags/@t.Id"><span class="question-tag">@t.Name</span></a>
                     }
                 </div>
-                <p>User: @q.User.Email • @q.User.Reputation</p>
+                <p>User: @WebFormater.GetUsernameHTMLString(q.User)</p>
             </div>
         </div>
     }
